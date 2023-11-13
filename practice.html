@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Binary Search Tree</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #output {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Binary Search Tree</h2>
+  <label for="inputValues">Enter values separated by commas:</label>
+  <input type="text" id="inputValues" placeholder="e.g., 13, 3, 4, 12, 14, 10, 5">
+
+  <button onclick="constructBST()">Construct BST</button>
+
+  <div id="output">
+    <h3>Traversal Results:</h3>
+    <p><strong>Pre-order:</strong> <span id="preorderResult"></span></p>
+    <p><strong>In-order:</strong> <span id="inorderResult"></span></p>
+    <p><strong>Post-order:</strong> <span id="postorderResult"></span></p>
+  </div>
+
+  <script>
+    function constructBST() {
+      // Get user input
+      const inputValues = document.getElementById('inputValues').value.trim();
+
+      if (!inputValues) {
+        alert('Please enter values.');
+        return;
+      }
+
+      // Parse input values into an array
+      const valuesArray = inputValues.split(',').map(value => parseInt(value.trim(), 10));
+
+      // Validate the input
+      if (valuesArray.some(isNaN)) {
+        alert('Invalid input. Please enter valid integer values separated by commas.');
+        return;
+      }
+
+      // Construct the BST
+      const root = constructBSTFromPreorder(valuesArray);
+
+      // Perform traversals
+      const preorderResult = [];
+      const inorderResult = [];
+      const postorderResult = [];
+
+      preOrderTraversal(root, preorderResult);
+      inOrderTraversal(root, inorderResult);
+      postOrderTraversal(root, postorderResult);
+
+      // Display traversal results
+      document.getElementById('preorderResult').innerText = preorderResult.join(', ');
+      document.getElementById('inorderResult').innerText = inorderResult.join(', ');
+      document.getElementById('postorderResult').innerText = postorderResult.join(', ');
+    }
+
+    // Define Binary Search Tree Node
+    function TreeNode(value) {
+      this.value = value;
+      this.left = null;
+      this.right = null;
+    }
+
+    // Construct BST from preorder
+    function constructBSTFromPreorder(preorder) {
+      let index = 0;
+      return buildTree(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
+
+      function buildTree(min, max) {
+        if (index === preorder.length) return null;
+
+        const value = preorder[index];
+        if (value < min || value > max) return null;
+
+        const node = new TreeNode(value);
+        index++;
+
+        node.left = buildTree(min, value);
+        node.right = buildTree(value, max);
+
+        return node;
+      }
+    }
+
+    // Traversal functions
+    function preOrderTraversal(root, result) {
+      if (root) {
+        result.push(root.value);
+        preOrderTraversal(root.left, result);
+        preOrderTraversal(root.right, result);
+      }
+    }
+
+    function inOrderTraversal(root, result) {
+      if (root) {
+        inOrderTraversal(root.left, result);
+        result.push(root.value);
+        inOrderTraversal(root.right, result);
+      }
+    }
+
+    function postOrderTraversal(root, result) {
+      if (root) {
+        postOrderTraversal(root.left, result);
+        postOrderTraversal(root.right, result);
+        result.push(root.value);
+      }
+    }
+  </script>
+</body>
+</html>
